@@ -1,24 +1,8 @@
 const express = require("express");
-const {users} = require("./Data/users.json")
+const {users} = require("../Data/users.json");
 
-const userRouter = require("./routes/users")
-const booksRouter = require("./routes/books")
+const router = express.Router();
 
-const app = express();
-
-const PORT = 8081;
-
-app.use(express.json());
-
-app.get("/", (req, res)=>{
-    res.status(200).json({
-        message: "Server is up and running"
-    })
-})
-
-
-app.use("/users", userRouter)
-app.use("/books", booksRouter)
 
 /**
  * Route: /users
@@ -28,7 +12,7 @@ app.use("/books", booksRouter)
  * Parameters: None
  */
 
-app.get("/users", (req, res)=>{
+router.get("/", (req, res)=>{
     res.status(200).json({
         success: true,
         Data: users
@@ -45,7 +29,7 @@ app.get("/users", (req, res)=>{
  * Parameters: None
  */
 
-app.get("/users/:id", (req, res)=>{
+router.get("/:id", (req, res)=>{
    const {id} = req.params;
    const user = users.find((each)=> each.id === id);
     
@@ -70,7 +54,7 @@ app.get("/users/:id", (req, res)=>{
  * Parameters: None
  */
 
-app.post("/users", (req, res)=>{
+router.post("/", (req, res)=>{
    const {id, name, surname, email, subscriptionType,subscriptionDate } = req.body;
 
    const user = users.find((each)=> each.id === id);
@@ -98,7 +82,7 @@ app.post("/users", (req, res)=>{
  * Parameters: id
  */
 
-app.put('/users/:id', (req, res)=>
+router.put('/:id', (req, res)=>
 {
     const {id} = req.params;
     const{data} = req.body;
@@ -133,7 +117,7 @@ app.put('/users/:id', (req, res)=>
  * Parameters: id
  */
 
-app.delete('/users/:id', (req, res)=>{
+router.delete('/:id', (req, res)=>{
     const{id} = req.params;
 
     const user = users.find((each)=> each.id === id);
@@ -152,13 +136,4 @@ app.delete('/users/:id', (req, res)=>{
     })
 })
 
-
-app.get("*", (req, res)=>{
-    res.status(200).json({
-        message: "this route does not exist"
-    })
-})
-
-app.listen(PORT, ()=>{
-    console.log(`Server is up and running on port ${PORT}`);
-})
+module.exports = router;
